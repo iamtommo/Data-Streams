@@ -28,5 +28,3 @@ stream.listen(new Function<Integer>() {
 });
 ```
 This snippet will print out each number in the array in succession.
-
-
