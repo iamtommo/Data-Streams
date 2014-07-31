@@ -24,6 +24,10 @@ public abstract class Stream<T> {
 		
 	}
 	
+	public static <T> Stream<T> broadcast(DirectStream<T> deriveFrom) {
+		return new BroadcastStream<T>(deriveFrom);
+	}
+	
 	public static <T> Stream<T> newStream() {
 		return new DirectStream<T>();
 	}
@@ -44,6 +48,10 @@ public abstract class Stream<T> {
 		Stream<T> stream = new DirectStream<T>();
 		stream.write(array);
 		return stream;
+	}
+	
+	public static <T> Stream<T> newBroadcast() {
+		return new BroadcastStream<T>();
 	}
 	
 	public abstract void write(T data);
