@@ -115,4 +115,16 @@ public class StreamTest {
 		stream.write(13);
 	}
 	
+	@Test
+	public void takeTest() {
+		Stream<Integer> stream = Stream.fromArray(defaultIntArray);
+		Assert.assertEquals((int) 2, (int) stream.take(2).length().get());
+		Assert.assertEquals((int) 1, (int) stream.take(2).where(new Predicate<Integer>() {
+			@Override
+			public boolean test(Integer t) {
+				return t == 1;
+			}
+		}).length().get());
+	}
+	
 }

@@ -13,7 +13,7 @@ public class DirectStream<T> extends Stream<T> {
 	 */
 	private Queue<T> backlog = new LinkedList<T>();
 	
-	protected DirectStream() {
+	public DirectStream() {
 		
 	}
 	
@@ -38,14 +38,22 @@ public class DirectStream<T> extends Stream<T> {
 	@Override
 	public void write(T data) {
 		if (hasSubscriber()) {
-			for (int i = 0; i < getSubscribers().size(); i++) {
-				StreamSubscription<T> sub = getSubscribers().get(i);
-				sub.handleData(data);
-			}
+			distributeDataToSubscribers(data);
 		} else {
 			backlog.offer(data);
 		}
 		
+		distributeDataToSubstreams(data);
+	}
+	
+	protected void distributeDataToSubscribers(T data) {
+		for (int i = 0; i < getSubscribers().size(); i++) {
+			StreamSubscription<T> sub = getSubscribers().get(i);
+			sub.handleData(data);
+		}
+	}
+	
+	protected void distributeDataToSubstreams(T data) {
 		for (Stream<T> stream : getSubstreams()) {
 			stream.write(data);
 		}
@@ -62,6 +70,31 @@ public class DirectStream<T> extends Stream<T> {
 		}
 	}
 	
+	@Override
+	protected Stream<T> newSubstream(Stream<T> substream) {
+		super.newSubstream(substream);
+		keepAndFireBacklog();
+		return substream;
+	}
+	
+	/**
+	 * Fires all data in the backlog, but does not clear it
+	 * <br><br>
+	 * This is used for when the stream has no subscribers, but has a substream
+	 */
+	@SuppressWarnings("unchecked")
+	protected void keepAndFireBacklog() {
+		T[] data = (T[]) backlog.toArray();
+		//TODO OK so technically we clear it, but we re-add it all :>
+		backlog.clear();
+		for (T d : data) {
+			write(d);
+		}
+	}
+	
+	/**
+	 * Empties and fires all data in the backlog, makes sure we currently have a subscriber, else it's a no-go
+	 */
 	protected void emptyAndFireBacklog() {
 		while (!backlog.isEmpty() && hasSubscriber()) {
 			write(backlog.poll());

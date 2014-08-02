@@ -37,7 +37,52 @@ To create a broadcast stream, simply call:
 ```
 Stream<Integer> stream = Stream.newBroadcast();
 ```
-You can also broadcast an existing stream, allowing it to essentially act as a broadcast stream, by using this factory call:
+You can also broadcast an existing stream, allowing it to essentially act as a broadcast stream:
 ```
-Stream<Integer> stream = Stream.broadcast(Stream.fromArray(new Integer[] { 1, 2, 3 }));
+Stream<Integer> stream = Stream.fromArray(new Integer[] { 1, 2, 3 }).asBroadcast();
 ```
+
+##### Manipulating data flow
+The Stream class contains many filter functions to manipulate data.
+The *where* stream will create a sub stream which validates all data with the given predicate before firing events.
+
+```
+stream.where(new Predicate<Integer>() {
+	@Override
+	public boolean test(Integer data) {
+		return data > 0;
+	}
+});
+```
+We can then listen to this filtered stream by calling the listen method on the returned stream as shown above.
+
+Next up is the *take* stream, which appropriately takes only a select amount of data from the stream
+
+```
+stream.take(5);
+```
+
+Putting this together, we can create complex data flow structures such as:
+
+```
+Stream<Integer> stream = Stream.fromArray(new Integer[] { 1, 2, 3, 4, 5 });
+stream.take(2)
+	.where(new Predicate<Integer>() {
+		@Override
+		public boolean test(Integer t) {
+			return t % 2 == 0;
+		}
+	}).listen(new Function<Integer>() {
+		@Override
+		public void operate(Integer data) {
+			System.out.println(data);
+		}
+	});
+```
+
+This snippet will produce the output:
+```
+2
+4
+```
+

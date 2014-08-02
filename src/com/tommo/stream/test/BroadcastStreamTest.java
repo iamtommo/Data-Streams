@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import com.tommo.stream.DirectStream;
 import com.tommo.stream.Stream;
 import com.tommo.stream.function.Function;
 
@@ -23,7 +24,7 @@ public class BroadcastStreamTest {
 	@Test
 	public void testBroadcast() {
 		i = 0;
-		Stream<Integer> stream = Stream.newBroadcast();
+		Stream<Integer> stream = new DirectStream<Integer>().asBroadcast();
 		stream.listen(defaultIncFunction);
 		stream.listen(defaultIncFunction);
 		stream.write(defaultIntArray);

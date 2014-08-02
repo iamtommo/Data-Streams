@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.tommo.stream.function.Function;
 import com.tommo.stream.function.Predicate;
+import com.tommo.stream.impl.TakeStream;
 import com.tommo.stream.impl.WhereStream;
 
 /**
@@ -23,16 +24,12 @@ public abstract class Stream<T> {
 	private List<StreamSubscription<T>> subscribers = new ArrayList<StreamSubscription<T>>();
 	private List<Stream<T>> substreams = new ArrayList<Stream<T>>();
 	
-	protected Stream() {
+	public Stream() {
 		
 	}
 	
 	public static <T> Stream<T> newBroadcast() {
 		return new BroadcastStream<T>();
-	}
-	
-	public static <T> Stream<T> broadcast(Stream<T> stream) {
-		return new BroadcastStream<T>(stream);
 	}
 	
 	public static <T> Stream<T> newStream() {
@@ -74,10 +71,23 @@ public abstract class Stream<T> {
 	/**
 	 * Returns a new Stream which only fires data that is deemed <i>true</i> by the predicate
 	 * @param test The boolean predicate
-	 * @return The new stream
+	 * @return The new Stream
 	 */
 	public Stream<T> where(Predicate<T> test) {
 		return newSubstream(new WhereStream<T>(this, test));
+	}
+	
+	/**
+	 * Returns a new Stream which only takes a given amount of data
+	 * @param take How much data to take
+	 * @return The new Stream
+	 */
+	public Stream<T> take(int take) {
+		return newSubstream(new TakeStream<T>(this, take));
+	}
+	
+	public Stream<T> asBroadcast() {
+		return newSubstream(new BroadcastStream<T>(this));
 	}
 	
 	public void write(T[] data) {
@@ -101,7 +111,7 @@ public abstract class Stream<T> {
 		return false;
 	}
 	
-	private Stream<T> newSubstream(Stream<T> substream) {
+	protected Stream<T> newSubstream(Stream<T> substream) {
 		substreams.add(substream);
 		return substream;
 	}

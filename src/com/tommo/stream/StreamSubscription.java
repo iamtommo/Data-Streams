@@ -6,7 +6,6 @@ public class StreamSubscription<T> {
 	
 	private Function<T> handleData;
 	private Function<T> handleDone;
-	private boolean stopped = false;
 	
 	public StreamSubscription() {
 		
@@ -14,10 +13,6 @@ public class StreamSubscription<T> {
 	
 	public StreamSubscription(Function<T> handleData) {
 		this.handleData = handleData;
-	}
-	
-	public void stop() {
-		stopped = true;
 	}
 	
 	public void handleData(T data) {
@@ -29,10 +24,6 @@ public class StreamSubscription<T> {
 	
 	public void onData(Function<T> handleData) {
 		this.handleData = handleData;
-	}
-	
-	public boolean hasStopped() {
-		return stopped;
 	}
 	
 	public void setHandleData(Function<T> handleData) {

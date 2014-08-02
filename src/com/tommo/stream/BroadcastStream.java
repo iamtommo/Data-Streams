@@ -20,7 +20,7 @@ public class BroadcastStream<T> extends DirectStream<T> {
 	 * @param deriveFrom The existing stream to derive from
 	 */
 	public BroadcastStream(Stream<T> deriveFrom) {
-		initializeFromExisting(deriveFrom);
+		//initializeFromExisting(deriveFrom);
 	}
 	
 	@Override
