@@ -37,7 +37,7 @@ To create a broadcast stream, simply call:
 ```
 Stream<Integer> stream = Stream.newBroadcast();
 ```
-You can also broadcast an existing stream by using this factory call:
+You can also broadcast an existing stream, allowing it to essentially act as a broadcast stream, by using this factory call:
 ```
 Stream<Integer> stream = Stream.broadcast(Stream.fromArray(new Integer[] { 1, 2, 3 }));
 ```

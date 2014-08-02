@@ -22,11 +22,12 @@ public class BroadcastStreamTest {
 	
 	@Test
 	public void testBroadcast() {
+		i = 0;
 		Stream<Integer> stream = Stream.newBroadcast();
 		stream.listen(defaultIncFunction);
 		stream.listen(defaultIncFunction);
 		stream.write(defaultIntArray);
-		Assert.assertTrue(i == 8);
+		Assert.assertEquals(8, i);
 	}
 
 }

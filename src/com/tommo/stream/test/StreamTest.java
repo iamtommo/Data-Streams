@@ -10,6 +10,7 @@ import org.junit.runners.JUnit4;
 
 import com.tommo.stream.Stream;
 import com.tommo.stream.function.Function;
+import com.tommo.stream.function.Predicate;
 
 @RunWith(JUnit4.class)
 public class StreamTest {
@@ -94,4 +95,24 @@ public class StreamTest {
 		Assert.assertTrue(stream.length().get() == defaultIntArray.length - 1);
 	}
 
+	@Test
+	public void whereTest() {
+		Stream<Integer> stream = Stream.fromArray(defaultIntArray);
+		stream.where(new Predicate<Integer>() {
+			@Override
+			public boolean test(Integer t) {
+				return t == 69;
+			}
+		}).listen(new Function<Integer>() {
+			@Override
+			public void operate(Integer v) {
+				Assert.assertTrue(v == 69);
+			}
+		});
+		
+		stream.write(1);
+		stream.write(69);
+		stream.write(13);
+	}
+	
 }

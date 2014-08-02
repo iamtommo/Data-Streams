@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.tommo.stream.function.Function;
+import com.tommo.stream.function.Predicate;
+import com.tommo.stream.impl.WhereStream;
 
 /**
  * A stream consists of a flow of data, which can be listened to
@@ -19,13 +21,18 @@ import com.tommo.stream.function.Function;
 public abstract class Stream<T> {
 	
 	private List<StreamSubscription<T>> subscribers = new ArrayList<StreamSubscription<T>>();
+	private List<Stream<T>> substreams = new ArrayList<Stream<T>>();
 	
 	protected Stream() {
 		
 	}
 	
-	public static <T> Stream<T> broadcast(DirectStream<T> deriveFrom) {
-		return new BroadcastStream<T>(deriveFrom);
+	public static <T> Stream<T> newBroadcast() {
+		return new BroadcastStream<T>();
+	}
+	
+	public static <T> Stream<T> broadcast(Stream<T> stream) {
+		return new BroadcastStream<T>(stream);
 	}
 	
 	public static <T> Stream<T> newStream() {
@@ -50,10 +57,6 @@ public abstract class Stream<T> {
 		return stream;
 	}
 	
-	public static <T> Stream<T> newBroadcast() {
-		return new BroadcastStream<T>();
-	}
-	
 	public abstract void write(T data);
 	
 	/**
@@ -67,6 +70,15 @@ public abstract class Stream<T> {
 	 * @return The next value
 	 */
 	public abstract Future<T> single();
+	
+	/**
+	 * Returns a new Stream which only fires data that is deemed <i>true</i> by the predicate
+	 * @param test The boolean predicate
+	 * @return The new stream
+	 */
+	public Stream<T> where(Predicate<T> test) {
+		return newSubstream(new WhereStream<T>(this, test));
+	}
 	
 	public void write(T[] data) {
 		for (T t : data) {
@@ -89,6 +101,11 @@ public abstract class Stream<T> {
 		return false;
 	}
 	
+	private Stream<T> newSubstream(Stream<T> substream) {
+		substreams.add(substream);
+		return substream;
+	}
+	
 	public void addSubscriber(StreamSubscription<T> subscriber) {
 		subscribers.add(subscriber);
 	}
@@ -105,6 +122,10 @@ public abstract class Stream<T> {
 
 	public List<StreamSubscription<T>> getSubscribers() {
 		return subscribers;
+	}
+	
+	public List<Stream<T>> getSubstreams() {
+		return substreams;
 	}
 	
 }

@@ -19,16 +19,8 @@ public class BroadcastStream<T> extends DirectStream<T> {
 	 * distribute them as soon as possible
 	 * @param deriveFrom The existing stream to derive from
 	 */
-	public BroadcastStream(DirectStream<T> deriveFrom) {
+	public BroadcastStream(Stream<T> deriveFrom) {
 		initializeFromExisting(deriveFrom);
-	}
-	
-	private void initializeFromExisting(DirectStream<T> existing) {
-		addSubscriber(existing.getSubscriber());
-		for (T data : existing.getBacklog()) {
-			getBacklog().offer(data);
-		}
-		emptyAndFireBacklog();
 	}
 	
 	@Override

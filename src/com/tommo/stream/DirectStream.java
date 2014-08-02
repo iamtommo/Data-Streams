@@ -38,11 +38,16 @@ public class DirectStream<T> extends Stream<T> {
 	@Override
 	public void write(T data) {
 		if (hasSubscriber()) {
-			for (StreamSubscription<T> sub : getSubscribers()) {
+			for (int i = 0; i < getSubscribers().size(); i++) {
+				StreamSubscription<T> sub = getSubscribers().get(i);
 				sub.handleData(data);
 			}
 		} else {
 			backlog.offer(data);
+		}
+		
+		for (Stream<T> stream : getSubstreams()) {
+			stream.write(data);
 		}
 	}
 	
@@ -61,6 +66,19 @@ public class DirectStream<T> extends Stream<T> {
 		while (!backlog.isEmpty() && hasSubscriber()) {
 			write(backlog.poll());
 		}
+	}
+	
+	protected void initializeFromExisting(Stream<T> existing) {
+		for (StreamSubscription<T> sub : existing.getSubscribers()) {
+			addSubscriber(sub);
+		}
+		if (existing instanceof DirectStream) {
+			DirectStream<T> ds = (DirectStream<T>) existing;
+			for (T data : ds.getBacklog()) {
+				getBacklog().offer(data);
+			}
+		}
+		emptyAndFireBacklog();
 	}
 	
 	public boolean hasSubscriber() {
