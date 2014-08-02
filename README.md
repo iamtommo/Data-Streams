@@ -42,7 +42,10 @@ You can also broadcast an existing stream, allowing it to essentially act as a b
 Stream<Integer> stream = Stream.fromArray(new Integer[] { 1, 2, 3 }).asBroadcast();
 ```
 
-##### Manipulating data flow
+Manipulating data flow
+---
+
+##### *Where*
 The Stream class contains many filter functions to manipulate data.
 The *where* stream will create a sub stream which validates all data with the given predicate before firing events.
 
@@ -56,6 +59,7 @@ stream.where(new Predicate<Integer>() {
 ```
 We can then listen to this filtered stream by calling the listen method on the returned stream as shown above.
 
+##### *Take*
 Next up is the *take* stream, which appropriately takes only a select amount of data from the stream
 
 ```
@@ -83,6 +87,5 @@ stream.take(2)
 This snippet will produce the output:
 ```
 2
-4
 ```
 
