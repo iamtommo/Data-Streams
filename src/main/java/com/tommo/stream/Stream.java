@@ -8,6 +8,7 @@ import com.tommo.stream.function.Function;
 import com.tommo.stream.function.Predicate;
 import com.tommo.stream.impl.AnyStream;
 import com.tommo.stream.impl.ElementAtStream;
+import com.tommo.stream.impl.SkipStream;
 import com.tommo.stream.impl.TakeStream;
 import com.tommo.stream.impl.WhereStream;
 
@@ -92,13 +93,22 @@ public abstract class Stream<T> {
 	}
 	
 	/**
-	 * 
-	 * @param index
-	 * @return
+	 * Returns the value at the given index of this stream
+	 * @param index The index of the value
+	 * @return A Future, yielding a value when a value is acquired
 	 */
 	public Future<T> elementAt(int index) {
 		ElementAtStream<T> stream = (ElementAtStream<T>) newSubstream(new ElementAtStream<T>(this, index));
 		return stream.getFuture();
+	}
+	
+	/**
+	 * Skips <i>count</i> number of data events from this stream
+	 * @param count How many values to skip
+	 * @return
+	 */
+	public Stream<T> skip(int count) {
+		return newSubstream(new SkipStream<T>(this, count));
 	}
 	
 	/**

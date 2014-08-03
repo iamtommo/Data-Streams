@@ -150,4 +150,15 @@ public class StreamTest {
 		});
 	}
 	
+	@Test
+	public void skipTest() {
+		Stream<Integer> stream = Stream.fromArray(defaultIntArray);
+		stream.skip(defaultIntArray.length - 1).listen(new Function<Integer>() {
+			@Override
+			public void operate(Integer v) {
+				Assert.assertEquals(defaultIntArray[defaultIntArray.length - 1], v);
+			}
+		});
+	}
+	
 }
