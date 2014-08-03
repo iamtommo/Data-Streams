@@ -27,7 +27,7 @@ public class DirectStream<T> extends Stream<T> {
 		sub.setHandleData(new Function<T>() {
 			@Override
 			public void operate(T v) {
-				future.sync(v);
+				future.set(v);
 				DirectStream.this.removeSubscriber(sub);
 			}
 		});

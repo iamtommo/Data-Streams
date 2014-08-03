@@ -127,4 +127,16 @@ public class StreamTest {
 		}).length().get());
 	}
 	
+	@Test
+	public void anyTest() {
+		Stream<Integer> stream = Stream.fromArray(defaultIntArray);
+		
+		Assert.assertTrue(stream.any(new Predicate<Integer>() {
+			@Override
+			public boolean test(Integer t) {
+				return t % 2 == 0;
+			}
+		}).get());
+	}
+	
 }

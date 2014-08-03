@@ -113,18 +113,6 @@ public class Future<V> {
 	}
 	
 	/**
-	 * Sets the value of this Future
-	 * @param value The new value
-	 * @return This future
-	 */
-	public Future<V> sync(V value) {
-		valueSet = true;
-		this.value = value;
-		sync();
-		return new Future<V>(value);
-	}
-	
-	/**
 	 * Registers a transformer that will be called when this Future has a value
 	 * <br><br>
 	 * Warning: this method calls {@link #sync()} on the current Future, which waits indeterminently for a value, before transforming
@@ -181,8 +169,10 @@ public class Future<V> {
 	 * @return This Future
 	 */
 	public Future<V> set(V value) {
+		valueSet = true;
 		this.value = value;
-		return this;
+		sync();
+		return new Future<V>(value);
 	}
 	
 	/**

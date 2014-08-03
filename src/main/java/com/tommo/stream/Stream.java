@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.tommo.stream.function.Function;
 import com.tommo.stream.function.Predicate;
+import com.tommo.stream.impl.AnyStream;
 import com.tommo.stream.impl.TakeStream;
 import com.tommo.stream.impl.WhereStream;
 
@@ -75,8 +76,9 @@ public abstract class Stream<T> {
 	 * @param test The test
 	 * @return
 	 */
-	public Future<T> any(Predicate<T> test) {
-		return null;
+	public Future<Boolean> any(Predicate<T> test) {
+		AnyStream<T> any = (AnyStream<T>) newSubstream(new AnyStream<T>(this, test));
+		return any.getFuture();
 	}
 	
 	/**
