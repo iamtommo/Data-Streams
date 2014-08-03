@@ -3,6 +3,13 @@ Data Streams
 
 Lightweight data flow library for Java, heavily inspired by [Dart Streams](https://www.dartlang.org/docs/tutorials/streams/)
 
+Using the library
+---
+The project is configured to use Maven as the default build tool. Maven will generate a jar, useable in your project, by using this command in the top directory
+```
+mvn clean install
+```
+
 Samples
 ----
 Make sure to check out the test cases for more samples.
