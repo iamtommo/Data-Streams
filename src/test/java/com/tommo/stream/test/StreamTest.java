@@ -139,4 +139,15 @@ public class StreamTest {
 		}).get());
 	}
 	
+	@Test
+	public void elementAtTest() {
+		Stream<Integer> stream = Stream.fromArray(defaultIntArray);
+		stream.elementAt(2).then(new Function<Integer>() {
+			@Override
+			public void operate(Integer v) {
+				Assert.assertEquals((int) 3, (int) v);
+			}
+		});
+	}
+	
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import com.tommo.stream.function.Function;
 import com.tommo.stream.function.Predicate;
 import com.tommo.stream.impl.AnyStream;
+import com.tommo.stream.impl.ElementAtStream;
 import com.tommo.stream.impl.TakeStream;
 import com.tommo.stream.impl.WhereStream;
 
@@ -72,7 +73,7 @@ public abstract class Stream<T> {
 	/**
 	 * Checks if any data provided by this stream is accepted by the <i>test<i> predicate
 	 * <br><br>
-	 * Note that the future will hold no value until a 
+	 * Note that the future will hold no value until an answer is known
 	 * @param test The test
 	 * @return
 	 */
@@ -88,6 +89,16 @@ public abstract class Stream<T> {
 	 */
 	public Stream<T> where(Predicate<T> test) {
 		return newSubstream(new WhereStream<T>(this, test));
+	}
+	
+	/**
+	 * 
+	 * @param index
+	 * @return
+	 */
+	public Future<T> elementAt(int index) {
+		ElementAtStream<T> stream = (ElementAtStream<T>) newSubstream(new ElementAtStream<T>(this, index));
+		return stream.getFuture();
 	}
 	
 	/**
