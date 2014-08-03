@@ -39,7 +39,7 @@ public class DirectStream<T> extends Stream<T> {
 	public void write(T data) {
 		if (hasSubscriber()) {
 			distributeDataToSubscribers(data);
-		} else {
+		} else if (!isBroadcast()){
 			backlog.offer(data);
 		}
 		

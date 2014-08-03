@@ -69,6 +69,17 @@ public abstract class Stream<T> {
 	public abstract Future<T> single();
 	
 	/**
+	 * Checks if any data provided by this stream is accepted by the <i>test<i> predicate
+	 * <br><br>
+	 * Note that the future will hold no value until a 
+	 * @param test The test
+	 * @return
+	 */
+	public Future<T> any(Predicate<T> test) {
+		return null;
+	}
+	
+	/**
 	 * Returns a new Stream which only fires data that is deemed <i>true</i> by the predicate
 	 * @param test The boolean predicate
 	 * @return The new Stream
